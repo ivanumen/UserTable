@@ -20,7 +20,6 @@ public class Util {
     private static final Connection connection;
     private static Statement statement;
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-
     private static SessionFactory sessionFactory = null;
 
     static {
@@ -35,8 +34,8 @@ public class Util {
         try {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
             connection.setAutoCommit(false);
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
+       } catch (SQLException sqle) {
+        sqle.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -81,6 +80,7 @@ public class Util {
         try {
             statement = connection.createStatement();
         } catch (SQLException sqle) {
+
             sqle.printStackTrace();
             throw new RuntimeException();
         }
