@@ -20,8 +20,7 @@ public class Util {
     private static final Connection connection;
     private static Statement statement;
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-
-    //private static SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory = null;
 
     static {
         try {
@@ -35,40 +34,43 @@ public class Util {
         try {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
             connection.setAutoCommit(false);
-        } catch(SQLException sqle) {
-            sqle.printStackTrace();
+       } catch (SQLException sqle) {
+        sqle.printStackTrace();
             throw new RuntimeException();
         }
     }
 
-//    public static SessionFactory getSessionFactory() {
-//        if (sessionFactory == null) {
-//            try {
-//                Configuration configuration = new Configuration();
-//                Properties settings = new Properties();
-//
-//                settings.put(Environment.DRIVER, DRIVER);
-//                settings.put(Environment.URL, URL);
-//                settings.put(Environment.USER, USER_NAME);
-//                settings.put(Environment.PASS, PASSWORD);
-//                settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect");
-//                settings.put(Environment.SHOW_SQL, "true");
-//                settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-//                settings.put(Environment.HBM2DDL_AUTO, "create-drop");
-//
-//                configuration.setProperties(settings);
-//                configuration.addAnnotatedClass(User.class);
-//
-//                ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-//                        .applySettings(configuration.getProperties()).build();
-//
-//                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return sessionFactory;
-//    }
+    public SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            try {
+                Configuration configuration = new Configuration();
+
+                Properties settings = new Properties();
+
+                settings.put(Environment.DRIVER, DRIVER);
+                settings.put(Environment.URL, URL);
+                settings.put(Environment.USER, USER_NAME);
+                settings.put(Environment.PASS, PASSWORD);
+                settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+                settings.put(Environment.SHOW_SQL, "false");
+                settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+                settings.put(Environment.HBM2DDL_AUTO, "create-drop");
+
+                configuration.setProperties(settings);
+
+                configuration.addAnnotatedClass(User.class);
+
+                ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                        .applySettings(configuration.getProperties()).build();
+
+                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+                System.out.println(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return sessionFactory;
+    }
 
     public Connection getConnection() {
         return connection;
@@ -77,11 +79,11 @@ public class Util {
     public Statement getStatement() {
         try {
             statement = connection.createStatement();
-        } catch(SQLException sqle) {
+        } catch (SQLException sqle) {
+
             sqle.printStackTrace();
             throw new RuntimeException();
         }
         return statement;
     }
-
 }
